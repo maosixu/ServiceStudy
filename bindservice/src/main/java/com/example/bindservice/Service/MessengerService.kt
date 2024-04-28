@@ -9,25 +9,27 @@ import android.os.Message
 import android.os.Messenger
 import android.widget.Toast
 
-private const val  MSG_SAY_HELLO = 1
+private const val MSG_SAY_HELLO = 1
 
 class MessengerService : Service() {
-    private lateinit var mMessager:Messenger
+    private lateinit var mMessager: Messenger
 
     internal class IncomingHandler(
         context: Context,
         private val applicationContext: Context = context.applicationContext
-    ):Handler(){
+    ) : Handler() {
         override fun handleMessage(msg: Message) {
-            when(msg.what){
-                MSG_SAY_HELLO -> Toast.makeText(applicationContext,"hello!",Toast.LENGTH_LONG).show()
+            when (msg.what) {
+                MSG_SAY_HELLO -> Toast.makeText(applicationContext, "hello!", Toast.LENGTH_LONG)
+                    .show()
+
                 else -> super.handleMessage(msg)
             }
         }
     }
 
     override fun onBind(intent: Intent): IBinder {
-        Toast.makeText(applicationContext,"binding",Toast.LENGTH_LONG).show()
+        Toast.makeText(applicationContext, "binding", Toast.LENGTH_LONG).show()
         mMessager = Messenger(IncomingHandler(this))
         return mMessager.binder
     }

@@ -18,6 +18,9 @@ class LocalService : Service() {
         get() = mGenerator.nextInt(100)
 
     inner class LocalBinder:Binder(){
+        /**
+         * 返回LocalService实例
+         */
         fun getService():LocalService = this@LocalService
     }
 

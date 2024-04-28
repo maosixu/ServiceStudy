@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var mService:Messenger?=null
     private var bound:Boolean = false
 
+    //扩展Binder类进行进程间通信
     private val connection = object : ServiceConnection{
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as LocalService.LocalBinder
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //通过Messenger进行进程间通信
     private val mConnection = object :ServiceConnection{
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             mService = Messenger(service)
@@ -55,6 +57,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    override fun onStop() {
+        super.onStop()
+        if(mBound){
+            unbindService(connection)
+            mBound = false
+        }
+        if (bound) {
+            unbindService(mConnection)
+            bound = false
+        }
+    }
 
     fun bindService(view: View){
         Intent(this, LocalService::class.java).also { intent ->
@@ -68,6 +81,7 @@ class MainActivity : AppCompatActivity() {
 
     fun getRandomNumber(view: View) {
         if (mBound) {
+            //获取Service中的randomNumber字段
             val num = lService.randomNumber
             Toast.makeText(this, "number: $num", Toast.LENGTH_SHORT).show()
         }
@@ -83,20 +97,10 @@ class MainActivity : AppCompatActivity() {
         if(!bound)return
         val  msg = Message.obtain(null,MSG_SAY_HELLO,0,0)
         try{
+            //通过Messenger发送消息
             mService?.send(msg)
         }catch (e:RemoteException){
             e.printStackTrace()
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        unbindService(connection)
-        mBound = false
-
-        if (bound) {
-            unbindService(mConnection)
-            bound = false
         }
     }
 }
