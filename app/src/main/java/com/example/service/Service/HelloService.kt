@@ -26,13 +26,15 @@ class HelloService : Service() {
     }
 
     override fun onCreate() {
+        //创建一个名为ServiceStartArguments的后台优先级线程
         HandlerThread("ServiceStartArguments",Process.THREAD_PRIORITY_BACKGROUND).apply {
-            start()
+            start() //启动线程
             serviceLooper = looper
             serviceHandler = ServiceHandler(looper)
         }
     }
 
+    //通过startService启动时会被调用
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Toast.makeText(this,"service starting", Toast.LENGTH_LONG).show()
         serviceHandler?.obtainMessage()?.also { msg->
@@ -42,11 +44,11 @@ class HelloService : Service() {
         return START_STICKY
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
-
     override fun onDestroy() {
         Toast.makeText(this,"service done",Toast.LENGTH_LONG).show()
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
     }
 }
