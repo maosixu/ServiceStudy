@@ -16,5 +16,5 @@ dependencyResolutionManagement {
 rootProject.name = "Service"
 include(":app")
 include(":bindservice")
-include(":aidl")
+include(":aidlservice")
 include(":aidlclient")

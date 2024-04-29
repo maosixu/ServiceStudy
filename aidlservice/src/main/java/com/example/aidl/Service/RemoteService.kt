@@ -29,6 +29,7 @@ class RemoteService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
+        Toast.makeText(context,"service binding",Toast.LENGTH_LONG).show()
         return binder
     }
 

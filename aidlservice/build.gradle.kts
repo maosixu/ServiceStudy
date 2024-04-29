@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.aidl"
+    namespace = "com.example.aidlservice"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.aidl"
+        applicationId = "com.example.aidl.aidlservice"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

@@ -27,18 +27,9 @@ class MainActivity : AppCompatActivity() {
             iRemoteService = IRemoteService.Stub.asInterface(service)
         }
 
-        // Called when the connection with the service disconnects unexpectedly.
         override fun onServiceDisconnected(className: ComponentName) {
             Log.e(TAG, "Service has unexpectedly disconnected")
             iRemoteService = null
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Intent().also { intent ->
-            intent.setClassName("com.example.aidl", "com.example.aidl.Service.RemoteService")
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
@@ -47,13 +38,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    fun connectAidlService(view: View) {
+        //使用显示Intent启动服务
+        Intent().also { intent ->
+            intent.setClassName("com.example.aidl", "com.example.aidl.Service.RemoteService")
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
     fun getRemoteServiceID(view: View) {
-        val rect = Rect()
-        rect.left = 1
-        rect.top = 2
-        rect.right = 3
-        rect.bottom = 4
-        iRemoteService?.sendRect(rect)
         Toast.makeText(this, "进程pid=${iRemoteService?.pid}", Toast.LENGTH_LONG).show()
+    }
+
+    fun sendRectMessage(view: View) {
+        val rect = Rect(1,2,3,4)
+        iRemoteService?.sendRect(rect)
     }
 }
