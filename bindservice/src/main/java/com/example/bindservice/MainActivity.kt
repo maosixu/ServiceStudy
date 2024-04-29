@@ -6,17 +6,17 @@ import android.content.Intent
 import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 import android.os.RemoteException
+import android.util.Log
 import android.view.View
 import android.view.WindowInsetsAnimation.Bounds
 import android.widget.Toast
 import com.example.bindservice.Service.LocalService
 import com.example.bindservice.Service.MessengerService
-
-private const val  MSG_SAY_HELLO = 1
 
 class MainActivity : AppCompatActivity() {
     private lateinit var lService:LocalService
@@ -24,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 
     private var mService:Messenger?=null
     private var bound:Boolean = false
+
+    private var clientMessenger: Messenger? = Messenger(ClientHandler())
+
 
     //扩展Binder类进行进程间通信
     private val connection = object : ServiceConnection{
@@ -49,7 +52,19 @@ class MainActivity : AppCompatActivity() {
             mService = null
             bound = false
         }
+    }
 
+    inner class ClientHandler : Handler() {
+        override fun handleMessage(msg: Message) {
+            // 处理来自服务端的响应消息
+            when (msg.what) {
+                MessengerService.MSG_FROM_SERVICE -> {
+                    val serviceReply = msg.data.getString("server")
+                    Toast.makeText(applicationContext,serviceReply,Toast.LENGTH_LONG).show()
+                }
+                else -> super.handleMessage(msg)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,10 +112,19 @@ class MainActivity : AppCompatActivity() {
         if(!bound)return
         val  msg = Message.obtain(null,MSG_SAY_HELLO,0,0)
         try{
+            val bundle = Bundle()
+            bundle.putString("client","客户端消息")
             //通过Messenger发送消息
+            msg.replyTo = clientMessenger
+            msg.data = bundle
             mService?.send(msg)
         }catch (e:RemoteException){
             e.printStackTrace()
         }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+        const val  MSG_SAY_HELLO = 1
     }
 }

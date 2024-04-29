@@ -1,23 +1,15 @@
-package com.example.aidl.Service
+package com.example.aidl.service
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
-import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.Process
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.example.aidl.IRemoteService
-import com.example.aidl.MainActivity
-import com.example.aidl.R
 
 class RemoteService : Service() {
 

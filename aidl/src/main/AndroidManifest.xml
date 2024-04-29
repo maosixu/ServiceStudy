@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Service">
         <service
-            android:name=".Service.RemoteService"
+            android:name=".service.RemoteService"
             android:enabled="true"
             android:exported="true">
         </service>

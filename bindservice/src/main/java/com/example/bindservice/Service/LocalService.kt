@@ -17,6 +17,10 @@ class LocalService : Service() {
     val randomNumber: Int
         get() = mGenerator.nextInt(100)
 
+    fun serverFun(){
+        Toast.makeText(this,"service fun",Toast.LENGTH_LONG).show()
+    }
+
     inner class LocalBinder:Binder(){
         /**
          * 返回LocalService实例
